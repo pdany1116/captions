@@ -69,7 +69,7 @@ RSpec.describe "Captions", type: :request do
         expect(response_json[:errors].first).to match(hash_including({
                                                                        code: "invalid_parameters",
                                                                        title: "Invalid parameters in request body",
-                                                                       description: "Caption root element not present in request body"
+                                                                       description: "param is missing or the value is empty: caption"
                                                                      }))
       end
     end
