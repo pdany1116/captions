@@ -16,16 +16,7 @@ RSpec.describe "Captions", type: :request do
       expect(response.body).not_to be_empty
 
       response_json = JSON.parse(response.body, symbolize_names: true)
-      expect(response_json).to eq({
-                                    captions: [
-                                      {
-                                        id: 123,
-                                        url: "https://google.com/image",
-                                        text: "Hi mom!",
-                                        caption_url: "https://localhost:3000/image.jpg"
-                                      }
-                                    ]
-                                  })
+      expect(response_json).to eq({ captions: [] })
     end
   end
 
@@ -53,14 +44,11 @@ RSpec.describe "Captions", type: :request do
 
         response_json = JSON.parse(response.body, symbolize_names: true)
 
-        expect(response_json).to eq({
-                                      caption: {
-                                        id: 123,
-                                        url: params[:caption][:url],
-                                        text: params[:caption][:text],
-                                        caption_url: "https://localhost:3000/image.jpg"
-                                      }
-                                    })
+        expect(response_json[:caption]).to match(hash_including({
+                                                                  url: params[:caption][:url],
+                                                                  text: params[:caption][:text],
+                                                                  caption_url: nil
+                                                                }))
       end
     end
   end
