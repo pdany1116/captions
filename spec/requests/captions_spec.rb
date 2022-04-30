@@ -101,5 +101,33 @@ RSpec.describe "Captions", type: :request do
                                                                      }))
       end
     end
+
+    context "with missing text element in request body" do
+      let(:params) do
+        {
+          caption: {
+            url: "https://google.com/image",
+          }
+        }
+      end
+
+      it "returns 400" do
+        post_captions
+
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it "returns an error body with text invalid parameters message" do
+        post_captions
+
+        response_json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response_json[:errors].first).to match(hash_including({
+                                                                       code: "invalid_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "param is missing or the value is empty: text"
+                                                                     }))
+      end
+    end
   end
 end

@@ -10,6 +10,7 @@ class CaptionsController < ApplicationController
   def create
     attributes = params.require(:caption).permit(:url, :text)
     url = attributes.require(:url)
+    text = attributes.require(:text)
 
     caption = Caption.create(attributes)
 
