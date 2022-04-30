@@ -56,8 +56,8 @@ RSpec.describe "Captions", type: :request do
         expect(response_json).to eq({
                                       caption: {
                                         id: 123,
-                                        url: "https://google.com/image",
-                                        text: "Hi mom!",
+                                        url: params[:caption][:url],
+                                        text: params[:caption][:text],
                                         caption_url: "https://localhost:3000/image.jpg"
                                       }
                                     })
