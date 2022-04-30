@@ -9,6 +9,8 @@ class CaptionsController < ApplicationController
 
   def create
     attributes = params.require(:caption).permit(:url, :text)
+    url = attributes.require(:url)
+
     caption = Caption.create(attributes)
 
     render json: { caption: caption }, status: :created

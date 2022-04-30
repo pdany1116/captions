@@ -52,7 +52,7 @@ RSpec.describe "Captions", type: :request do
       end
     end
 
-    context "with missing root element caption" do
+    context "with missing root element caption in request body" do
       let(:params) { {} }
 
       it "returns 400" do
@@ -61,7 +61,7 @@ RSpec.describe "Captions", type: :request do
         expect(response).to have_http_status(:bad_request)
       end
 
-      it "returns an error body with invalid parameters message" do
+      it "returns an error body with caption invalid parameters message" do
         post_captions
 
         response_json = JSON.parse(response.body, symbolize_names: true)
@@ -70,6 +70,34 @@ RSpec.describe "Captions", type: :request do
                                                                        code: "invalid_parameters",
                                                                        title: "Invalid parameters in request body",
                                                                        description: "param is missing or the value is empty: caption"
+                                                                     }))
+      end
+    end
+
+    context "with missing url element in request body" do
+      let(:params) do
+        {
+          caption: {
+            text: "Hi mom!"
+          }
+        }
+      end
+
+      it "returns 400" do
+        post_captions
+
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it "returns an error body with url invalid parameters message" do
+        post_captions
+
+        response_json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response_json[:errors].first).to match(hash_including({
+                                                                       code: "invalid_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "param is missing or the value is empty: url"
                                                                      }))
       end
     end
