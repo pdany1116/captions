@@ -51,5 +51,27 @@ RSpec.describe "Captions", type: :request do
                                                                 }))
       end
     end
+
+    context "with missing root element caption" do
+      let(:params) { {} }
+
+      it "returns 400" do
+        post_captions
+
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it "returns an error body with invalid parameters message" do
+        post_captions
+
+        response_json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response_json[:errors].first).to match(hash_including({
+                                                                       code: "invalid_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "Caption root element not present in request body"
+                                                                     }))
+      end
+    end
   end
 end
