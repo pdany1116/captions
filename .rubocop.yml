@@ -1,14 +1,14 @@
-require:  
-  - rubocop-rails  
-  - rubocop-rspec  
-  
-AllCops:  
-  Exclude:  
-    - 'vendor/bundle'  
-  
-Style/StringLiterals:  
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  Exclude:
+    - 'vendor/bundle'
+    - 'bin/bundle'
+
+Style/StringLiterals:
   Enabled: false
 
-Style/FrozenStringLiteralComment:
+Style/Documentation:
   Enabled: false
-  
