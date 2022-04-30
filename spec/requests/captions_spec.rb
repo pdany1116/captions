@@ -27,8 +27,8 @@ RSpec.describe "Captions", type: :request do
       let(:params) do
         {
           caption: {
-            url: "https://google.com/image",
-            text: "Hi mom!"
+            url: Faker::Internet.url,
+            text: Faker::String.random
           }
         }
       end
@@ -78,7 +78,7 @@ RSpec.describe "Captions", type: :request do
       let(:params) do
         {
           caption: {
-            text: "Hi mom!"
+            text: Faker::String.random
           }
         }
       end
@@ -106,7 +106,7 @@ RSpec.describe "Captions", type: :request do
       let(:params) do
         {
           caption: {
-            url: "https://google.com/image",
+            url: Faker::Internet.url
           }
         }
       end

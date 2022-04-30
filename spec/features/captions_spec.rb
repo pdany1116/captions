@@ -8,7 +8,7 @@ RSpec.describe "Captions", type: :request do
 
     context "when requesting all captions" do
       let(:url) { Faker::Internet.url }
-      let(:text) { Faker::Quote.robin }
+      let(:text) { Faker::String.random }
       let(:params) do
         {
           caption: {
