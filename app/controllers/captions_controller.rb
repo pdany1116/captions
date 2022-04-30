@@ -14,4 +14,16 @@ class CaptionsController < ApplicationController
     }
     render json: captions, status: :ok
   end
+
+  def create
+    caption = {
+      caption: {
+        id: 123,
+        url: "https://google.com/image",
+        text: "Hi mom!",
+        caption_url: "https://localhost:3000/image.jpg"
+      }
+    }
+    render json: caption, status: :created
+  end
 end
