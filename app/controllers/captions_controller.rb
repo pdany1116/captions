@@ -9,12 +9,14 @@ class CaptionsController < ApplicationController
 
   def create
     attributes = params.require(:caption).permit(:url, :text)
-    url = attributes.require(:url)
-    text = attributes.require(:text)
+    attributes.fetch(:url)
+    attributes.fetch(:text)
 
     caption = Caption.create(attributes)
+    return render json: { caption: caption }, status: :created if caption.valid?
 
-    render json: { caption: caption }, status: :created
+    render json: { errors: caption.errors.map { |err| invalid_parameters_error(err.full_message) } }, status: :unprocessable_entity
+
   rescue ActionController::ParameterMissing => e
     render json: { errors: [invalid_parameters_error(e.original_message)] }, status: :bad_request
   end
