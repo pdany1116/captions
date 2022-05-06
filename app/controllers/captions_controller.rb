@@ -7,6 +7,16 @@ class CaptionsController < ApplicationController
     render json: { captions: captions }, status: :ok
   end
 
+  def show
+    caption = Caption.find(params[:id])
+
+    render json: { "caption": caption }, status: :ok
+
+  rescue ActiveRecord::RecordNotFound => e
+    errors = not_found_error(e.message)
+    render json: { errors: [errors] }, status: :not_found
+  end
+
   def create
     attributes = params.require(:caption).permit(:url, :text)
     attributes.fetch(:url)
