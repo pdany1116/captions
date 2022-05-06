@@ -292,4 +292,51 @@ RSpec.describe "Captions", type: :request do
       end
     end
   end
+
+  describe "DELETE /captions" do
+    context "with existing caption" do
+      it "returns 200" do
+        post captions_path, params: {
+                                      caption: {
+                                        url: Faker::Internet.url(path: Faker::File.file_name(ext: "jpg")),
+                                        text: Faker::String.random
+                                      }
+                                    }
+
+        id = JSON.parse(response.body, symbolize_names: true)[:caption][:id]
+
+        delete "/captions/#{id}"
+  
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context "with not existing caption" do
+      let(:id) { 1 }
+
+      before :each do
+        get captions_path
+
+        expect(JSON.parse(response.body, symbolize_names: true)[:captions].length).to eq 0
+      end
+
+      it "returns 404" do
+        delete "/captions/#{id}"
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns an error body with caption not found message" do
+        delete "/captions/#{id}"
+
+        response_json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response_json[:errors].first).to match(hash_including({
+                                                                      code: "not_found",
+                                                                      title: "Caption not found",
+                                                                      description: "Couldn't find Caption with 'id'=#{id}"
+                                                                    }))
+      end
+    end
+  end
 end
