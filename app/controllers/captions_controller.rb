@@ -15,8 +15,9 @@ class CaptionsController < ApplicationController
     caption = Caption.create(attributes)
     return render json: { caption: caption }, status: :created if caption.valid?
 
-    render json: { errors: caption.errors.map { |err| invalid_parameters_error(err.full_message) } }, status: :unprocessable_entity
-
+    render json: { errors: caption.errors.map do |err|
+                             invalid_parameters_error(err.full_message)
+                           end }, status: :unprocessable_entity
   rescue ActionController::ParameterMissing => e
     render json: { errors: [invalid_parameters_error(e.original_message)] }, status: :bad_request
   end

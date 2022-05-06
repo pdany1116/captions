@@ -129,7 +129,7 @@ RSpec.describe "Captions", type: :request do
                                                                      }))
       end
     end
-    
+
     context "with invalid url value" do
       let(:params) do
         {
@@ -146,15 +146,15 @@ RSpec.describe "Captions", type: :request do
 
         it "returns 422" do
           post_captions
-          
+
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "returns an error body with invalid url value" do
           post_captions
-  
+
           response_json = JSON.parse(response.body, symbolize_names: true)
-  
+
           expect(response_json[:errors].first).to match(hash_including({
                                                                          code: "invalid_parameters",
                                                                          title: "Invalid parameters in request body",
@@ -191,14 +191,14 @@ RSpec.describe "Captions", type: :request do
         let(:text) { Faker::String.random }
 
         it "returns 422",
-          :skip => "Not implemented yet" do
+           skip: "Not implemented yet" do
           post_captions
 
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "returns an error body with invalid url value",
-          :skip => "Not implemented yet" do
+           skip: "Not implemented yet" do
           post_captions
 
           response_json = JSON.parse(response.body, symbolize_names: true)
@@ -228,7 +228,7 @@ RSpec.describe "Captions", type: :request do
 
         it "returns 422" do
           post_captions
-          
+
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
@@ -251,7 +251,7 @@ RSpec.describe "Captions", type: :request do
 
         it "returns 422" do
           post_captions
-          
+
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
@@ -274,7 +274,7 @@ RSpec.describe "Captions", type: :request do
 
         it "returns 422" do
           post_captions
-          
+
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
