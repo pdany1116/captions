@@ -23,12 +23,36 @@ class CaptionsController < ApplicationController
     render json: { errors: [errors] }, status: :bad_request
   end
 
+  def destroy
+    caption = Caption.find(params[:id])
+
+    if caption.destroy
+      render status: :ok
+    else
+      errors = caption.errors.map { |err| invalid_parameters_error(err.full_message) }
+
+      render json: { errors: errors }, status: 500
+    end
+
+  rescue ActiveRecord::RecordNotFound => e
+    errors = not_found_error(e.message)
+    render json: { errors: [errors] }, status: :not_found
+  end
+
   private
 
   def invalid_parameters_error(description)
     {
       code: "invalid_parameters",
       title: "Invalid parameters in request body",
+      description: description
+    }
+  end
+
+  def not_found_error(description)
+    {
+      code: "not_found",
+      title: "Caption not found",
       description: description
     }
   end
