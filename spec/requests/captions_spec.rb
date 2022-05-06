@@ -312,7 +312,7 @@ RSpec.describe "Captions", type: :request do
     end
 
     context "with not existing caption" do
-      let(:id) { 1 }
+      let(:id) { Faker::Number.number }
 
       before :each do
         get captions_path
@@ -328,6 +328,56 @@ RSpec.describe "Captions", type: :request do
 
       it "returns an error body with caption not found message" do
         delete "/captions/#{id}"
+
+        response_json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response_json[:errors].first).to match(hash_including({
+                                                                      code: "not_found",
+                                                                      title: "Caption not found",
+                                                                      description: "Couldn't find Caption with 'id'=#{id}"
+                                                                    }))
+      end
+    end
+  end
+
+  describe "GET /captions/:id" do
+    context "with existing caption" do
+      it "returns 200 and specifed caption as JSON" do
+        url = Faker::Internet.url(path: Faker::File.file_name(ext: "jpg"))
+        text = Faker::String.random
+        post captions_path, params: {
+                                      caption: {
+                                        url: url,
+                                        text: text
+                                      }
+                                    }
+        id = JSON.parse(response.body, symbolize_names: true)[:caption][:id]
+        get "/captions/#{id}"
+        caption = JSON.parse(response.body, symbolize_names: true)[:caption]
+
+        expect(response).to have_http_status(200)
+        expect(caption[:url]).to eq url
+        expect(caption[:text]).to eq text
+      end
+    end
+
+    context "with not existing caption" do
+      let(:id) { Faker::Number.number }
+
+      before :each do
+        get captions_path
+
+        expect(JSON.parse(response.body, symbolize_names: true)[:captions].length).to eq 0
+      end
+
+      it "returns 404" do
+        get "/captions/#{id}"
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns an error body with caption not found message" do
+        get "/captions/#{id}"
 
         response_json = JSON.parse(response.body, symbolize_names: true)
 
