@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "./lib/memefier"
+
 class CaptionsController < ApplicationController
   def index
     captions = Caption.all
