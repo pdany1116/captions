@@ -4,19 +4,33 @@ require 'rails_helper'
 
 RSpec.describe "Captions", type: :request do
   describe "GET /captions" do
-    it "responds with 200" do
-      get captions_path
-
-      expect(response).to have_http_status(:ok)
+    context "with no captions added" do
+      it "responds with 200" do
+        get captions_path
+  
+        expect(response).to have_http_status(:ok)
+      end
+  
+      it "responds with array with no captions" do
+        get captions_path
+  
+        expect(response.body).not_to be_empty
+  
+        response_json = JSON.parse(response.body, symbolize_names: true)
+        expect(response_json).to eq({ captions: [] })
+      end
     end
 
-    it "responds with good body" do
-      get captions_path
+    context "with captions added" do
+      it "responds with 200",
+        skip: "To be added" do
 
-      expect(response.body).not_to be_empty
+      end
 
-      response_json = JSON.parse(response.body, symbolize_names: true)
-      expect(response_json).to eq({ captions: [] })
+      it "responds with array of captions",
+        skip: "To be added" do
+
+      end
     end
   end
 
@@ -24,11 +38,14 @@ RSpec.describe "Captions", type: :request do
     subject(:post_captions) { post captions_path, params: params }
 
     context "with valid request body" do
+      let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
+      let(:text) { Faker::Beer.brand }
+      let(:caption_url) { "/images/#{Digest::MD5.hexdigest("#{url}#{text}")}.jpg" }
       let(:params) do
         {
           caption: {
-            url: Faker::Internet.url(path: Faker::File.file_name(ext: "jpg")),
-            text: Faker::String.random
+            url: url,
+            text: text
           }
         }
       end
@@ -45,9 +62,9 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:caption]).to match(hash_including({
-                                                                  url: params[:caption][:url],
-                                                                  text: params[:caption][:text],
-                                                                  caption_url: nil
+                                                                  url:  url,
+                                                                  text: text,
+                                                                  caption_url: caption_url
                                                                 }))
       end
     end
@@ -78,7 +95,7 @@ RSpec.describe "Captions", type: :request do
       let(:params) do
         {
           caption: {
-            text: Faker::String.random
+            text: Faker::Beer.brand
           }
         }
       end
@@ -106,7 +123,7 @@ RSpec.describe "Captions", type: :request do
       let(:params) do
         {
           caption: {
-            url: Faker::Internet.url
+            url: Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) 
           }
         }
       end
@@ -142,7 +159,7 @@ RSpec.describe "Captions", type: :request do
 
       context "with empty url" do
         let(:url) { "" }
-        let(:text) { Faker::String.random }
+        let(:text) { Faker::Beer.brand }
 
         it "returns 422" do
           post_captions
@@ -165,7 +182,7 @@ RSpec.describe "Captions", type: :request do
 
       context "with nil url" do
         let(:url) { nil }
-        let(:text) { Faker::String.random }
+        let(:text) { Faker::Beer.brand }
 
         it "returns 422" do
           post_captions
@@ -188,7 +205,7 @@ RSpec.describe "Captions", type: :request do
 
       context "with non image (jpeg, jpg, png) url" do
         let(:url) { Faker::Internet.url(path: Faker::File.file_name(ext: "mp3")) }
-        let(:text) { Faker::String.random }
+        let(:text) { Faker::Beer.brand }
 
         it "returns 422",
            skip: "Not implemented yet" do
@@ -223,7 +240,7 @@ RSpec.describe "Captions", type: :request do
       end
 
       context "with empty text" do
-        let(:url) { Faker::Internet.url(path: Faker::File.file_name(ext: "jpg")) }
+        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
         let(:text) { "" }
 
         it "returns 422" do
@@ -246,7 +263,7 @@ RSpec.describe "Captions", type: :request do
       end
 
       context "with text url" do
-        let(:url) { Faker::Internet.url(path: Faker::File.file_name(ext: "jpg")) }
+        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
         let(:text) { nil }
 
         it "returns 422" do
@@ -269,7 +286,7 @@ RSpec.describe "Captions", type: :request do
       end
 
       context "with text too long" do
-        let(:url) { Faker::Internet.url(path: Faker::File.file_name(ext: "jpg")) }
+        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
         let(:text) { Faker::String.random(length: 300) }
 
         it "returns 422" do
@@ -298,8 +315,8 @@ RSpec.describe "Captions", type: :request do
       it "returns 200" do
         post captions_path, params: {
                                       caption: {
-                                        url: Faker::Internet.url(path: Faker::File.file_name(ext: "jpg")),
-                                        text: Faker::String.random
+                                        url: Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) ,
+                                        text: Faker::Beer.brand
                                       }
                                     }
 
@@ -342,22 +359,33 @@ RSpec.describe "Captions", type: :request do
 
   describe "GET /captions/:id" do
     context "with existing caption" do
+      let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
+      let(:text) { Faker::Beer.brand }
+      let(:caption_url) { "/images/#{Digest::MD5.hexdigest("#{url}#{text}")}.jpg" }
+      let(:params) do
+        {
+          caption: {
+            url: url,
+            text: text
+          }
+        }
+      end
+
       it "returns 200 and specifed caption as JSON" do
-        url = Faker::Internet.url(path: Faker::File.file_name(ext: "jpg"))
-        text = Faker::String.random
-        post captions_path, params: {
-                                      caption: {
-                                        url: url,
-                                        text: text
-                                      }
-                                    }
+        post captions_path, params: params
+        expect(response).to have_http_status(201)
+
         id = JSON.parse(response.body, symbolize_names: true)[:caption][:id]
+
         get "/captions/#{id}"
-        caption = JSON.parse(response.body, symbolize_names: true)[:caption]
+        response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response).to have_http_status(200)
-        expect(caption[:url]).to eq url
-        expect(caption[:text]).to eq text
+        expect(response_json[:caption]).to match(hash_including({
+                                                                  url:  url,
+                                                                  text: text,
+                                                                  caption_url: caption_url
+                                                                }))
       end
     end
 

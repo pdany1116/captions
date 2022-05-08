@@ -24,13 +24,23 @@ class CaptionsController < ApplicationController
     attributes.fetch(:url)
     attributes.fetch(:text)
 
-    caption = Caption.create(attributes)
-    return render json: { caption: caption }, status: :created if caption.valid?
+    caption = Caption.new(attributes)
 
-    errors = caption.errors.map { |err| invalid_parameters_error(err.full_message) }
+    if caption.valid?
+      image_name = "#{Digest::MD5.hexdigest("#{caption.url}#{caption.text}")}.jpg"
 
-    render json: { errors: errors }, status: :unprocessable_entity
-  rescue ActionController::ParameterMissing => e
+      ImageDownloader.download(caption.url, image_name)
+      Memefier.memefy(caption.text, image_name)
+      caption.caption_url = "/images/#{image_name}"
+      caption.save
+
+      render json: { caption: caption }, status: :created if caption.valid?
+    else
+      errors = caption.errors.map { |err| invalid_parameters_error(err.full_message) }
+
+      render json: { errors: errors }, status: :unprocessable_entity
+    end
+  rescue ActionController::ParameterMissing, ImageDownloaderError => e
     errors = invalid_parameters_error(e.original_message)
     render json: { errors: [errors] }, status: :bad_request
   end
@@ -67,5 +77,13 @@ class CaptionsController < ApplicationController
       title: "Caption not found",
       description: description
     }
+  end
+
+  def images_dir
+    if ENV["RAILS_ENV"] == "test"
+      "spec/images/"
+    else
+      "images/"
+    end
   end
 end

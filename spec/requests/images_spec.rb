@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe "/images" do
   describe "GET /images/:id" do
     context "with existing image" do
-      let(:url) { "https://s3.amazonaws.com/com.twilio.prod.twilio-docs/images/test.original.jpg" }
-      let(:text) { "hi mom!" }
+      let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
+      let(:text) { Faker::Beer.brand }
 
       before do
         post "/captions", params: {
@@ -22,7 +22,7 @@ RSpec.describe "/images" do
       end
 
       after do
-        FileUtils.rm_r("spec/images/*")
+        FileUtils.rm_rf("./spec/images/.")
       end
 
       it "returns 200" do
@@ -34,15 +34,15 @@ RSpec.describe "/images" do
       end
 
       it "returns a body with content" do
-        expect(response.length).not_to eq 0
+        expect(response.body.size).not_to eq 0
       end
     end
 
     context "with not existing image" do
-      let(:id) { Faker::Number.hexadecimal(digits: 16) }
+      let(:image_name) { "#{Faker::Number.hexadecimal(digits: 16)}.jpg" }
 
       before do
-        get "/images/#{id}"
+        get "/images/#{image_name}"
       end
 
       it "returns 404" do
@@ -55,7 +55,7 @@ RSpec.describe "/images" do
         expect(response_json[:errors].first).to match(hash_including({
                                                                        code: "not_found",
                                                                        title: "Image not found",
-                                                                       description: "Couldn't find Image with 'id'=#{id}"
+                                                                       description: "Couldn't find Image #{image_name}"
                                                                      }))
       end
     end
