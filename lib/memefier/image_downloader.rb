@@ -1,17 +1,13 @@
+# frozen_string_literal: true
+
 require "down"
-require "./lib/errors/image_downloader_error"
+require_relative "image_downloader_error"
 
 class ImageDownloader
-  def download(uri, path)
-    Down.download(uri, destination: "./tmp/#{path}")
+  def self.download(uri, file_name)
+    Down.download(uri, destination: Memefier.file_path(file_name))
 
   rescue Down::Error
     raise ImageDownloaderError.new("Invalid URI provided!")
   end
-
-  def self.create
-    @instance ||= new
-  end
-
-  private_class_method :new
 end
