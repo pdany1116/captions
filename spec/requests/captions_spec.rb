@@ -96,7 +96,7 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                       code: "invalid_parameters",
+                                                                       code: "invalid_caption_parameters",
                                                                        title: "Invalid parameters in request body",
                                                                        description: "param is missing or the value is empty: caption"
                                                                      }))
@@ -124,7 +124,7 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                       code: "invalid_parameters",
+                                                                       code: "invalid_caption_parameters",
                                                                        title: "Invalid parameters in request body",
                                                                        description: "param is missing or the value is empty: url"
                                                                      }))
@@ -152,7 +152,7 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                       code: "invalid_parameters",
+                                                                       code: "invalid_caption_parameters",
                                                                        title: "Invalid parameters in request body",
                                                                        description: "param is missing or the value is empty: text"
                                                                      }))
@@ -185,7 +185,7 @@ RSpec.describe "Captions", type: :request do
           response_json = JSON.parse(response.body, symbolize_names: true)
 
           expect(response_json[:errors].first).to match(hash_including({
-                                                                         code: "invalid_parameters",
+                                                                         code: "invalid_caption_parameters",
                                                                          title: "Invalid parameters in request body",
                                                                          description: "Url can't be blank"
                                                                        }))
@@ -208,7 +208,7 @@ RSpec.describe "Captions", type: :request do
           response_json = JSON.parse(response.body, symbolize_names: true)
 
           expect(response_json[:errors].first).to match(hash_including({
-                                                                         code: "invalid_parameters",
+                                                                         code: "invalid_caption_parameters",
                                                                          title: "Invalid parameters in request body",
                                                                          description: "Url can't be blank"
                                                                        }))
@@ -233,7 +233,7 @@ RSpec.describe "Captions", type: :request do
           response_json = JSON.parse(response.body, symbolize_names: true)
 
           expect(response_json[:errors].first).to match(hash_including({
-                                                                         code: "invalid_parameters",
+                                                                         code: "invalid_caption_parameters",
                                                                          title: "Invalid parameters in request body",
                                                                          description: "url does not have jpg/jpeg/png format"
                                                                        }))
@@ -267,7 +267,7 @@ RSpec.describe "Captions", type: :request do
           response_json = JSON.parse(response.body, symbolize_names: true)
 
           expect(response_json[:errors].first).to match(hash_including({
-                                                                         code: "invalid_parameters",
+                                                                         code: "invalid_caption_parameters",
                                                                          title: "Invalid parameters in request body",
                                                                          description: "Text can't be blank"
                                                                        }))
@@ -290,7 +290,7 @@ RSpec.describe "Captions", type: :request do
           response_json = JSON.parse(response.body, symbolize_names: true)
 
           expect(response_json[:errors].first).to match(hash_including({
-                                                                         code: "invalid_parameters",
+                                                                         code: "invalid_caption_parameters",
                                                                          title: "Invalid parameters in request body",
                                                                          description: "Text can't be blank"
                                                                        }))
@@ -313,7 +313,7 @@ RSpec.describe "Captions", type: :request do
           response_json = JSON.parse(response.body, symbolize_names: true)
 
           expect(response_json[:errors].first).to match(hash_including({
-                                                                         code: "invalid_parameters",
+                                                                         code: "invalid_caption_parameters",
                                                                          title: "Invalid parameters in request body",
                                                                          description: "Text is too long (maximum is 266 characters)"
                                                                        }))
@@ -361,7 +361,7 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                       code: "not_found",
+                                                                       code: "caption_not_found",
                                                                        title: "Caption not found",
                                                                        description: "Couldn't find Caption with 'id'=#{id}"
                                                                      }))
@@ -422,7 +422,7 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                       code: "not_found",
+                                                                       code: "caption_not_found",
                                                                        title: "Caption not found",
                                                                        description: "Couldn't find Caption with 'id'=#{id}"
                                                                      }))
