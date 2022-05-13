@@ -20,10 +20,7 @@ class CaptionsController < ApplicationController
   end
 
   def create
-    attributes = params.require(:caption).permit(:url, :text)
-    attributes.fetch(:url)
-    attributes.fetch(:text)
-
+    attributes = validate_params(params)
     caption = Caption.new(attributes)
 
     if caption.valid?
@@ -34,7 +31,7 @@ class CaptionsController < ApplicationController
       caption.caption_url = "/images/#{image_name}"
       caption.save
 
-      render json: { caption: caption }, status: :created if caption.valid?
+      render json: { caption: caption }, status: :created
     else
       errors = caption.errors.map { |err| CaptionInvalidParamsErrorMessage.new(err.full_message).body }
 
@@ -58,5 +55,15 @@ class CaptionsController < ApplicationController
   rescue ActiveRecord::RecordNotFound => e
     error = CaptionNotFoundErrorMessage.new(e.message).body
     render json: { errors: [error] }, status: :not_found
+  end
+
+  private
+
+  def validate_params(params)
+    attributes = params.require(:caption).permit(:url, :text)
+    attributes.fetch(:url)
+    attributes.fetch(:text)
+
+    attributes
   end
 end
