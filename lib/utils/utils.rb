@@ -2,7 +2,7 @@
 
 class Utils
   def self.images_dir
-    if ENV["RAILS_ENV"] == "test"
+    if ENV.fetch("RAILS_ENV") == "test"
       "spec/images/"
     else
       "images/"

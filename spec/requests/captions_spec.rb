@@ -7,15 +7,15 @@ RSpec.describe "Captions", type: :request do
     context "with no captions added" do
       it "responds with 200" do
         get captions_path
-  
+
         expect(response).to have_http_status(:ok)
       end
-  
+
       it "responds with array with no captions" do
         get captions_path
-  
+
         expect(response.body).not_to be_empty
-  
+
         response_json = JSON.parse(response.body, symbolize_names: true)
         expect(response_json).to eq({ captions: [] })
       end
@@ -23,8 +23,8 @@ RSpec.describe "Captions", type: :request do
 
     context "with 5 captions added" do
       before do
-        for i in 1..5 do
-          url = Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) 
+        (1..5).each do |_i|
+          url = Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])
           text = Faker::Beer.brand
           params = {
             caption: {
@@ -74,7 +74,7 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:caption]).to match(hash_including({
-                                                                  url:  url,
+                                                                  url: url,
                                                                   text: text,
                                                                   caption_url: caption_url
                                                                 }))
@@ -135,7 +135,7 @@ RSpec.describe "Captions", type: :request do
       let(:params) do
         {
           caption: {
-            url: Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) 
+            url: Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])
           }
         }
       end
@@ -252,7 +252,7 @@ RSpec.describe "Captions", type: :request do
       end
 
       context "with empty text" do
-        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
+        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
         let(:text) { "" }
 
         it "returns 422" do
@@ -275,7 +275,7 @@ RSpec.describe "Captions", type: :request do
       end
 
       context "with text url" do
-        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
+        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
         let(:text) { nil }
 
         it "returns 422" do
@@ -298,7 +298,7 @@ RSpec.describe "Captions", type: :request do
       end
 
       context "with text too long" do
-        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
+        let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
         let(:text) { Faker::String.random(length: 300) }
 
         it "returns 422" do
@@ -326,24 +326,24 @@ RSpec.describe "Captions", type: :request do
     context "with existing caption" do
       it "returns 200" do
         post captions_path, params: {
-                                      caption: {
-                                        url: Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) ,
-                                        text: Faker::Beer.brand
-                                      }
-                                    }
+          caption: {
+            url: Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']),
+            text: Faker::Beer.brand
+          }
+        }
 
         id = JSON.parse(response.body, symbolize_names: true)[:caption][:id]
 
         delete "/captions/#{id}"
-  
-        expect(response).to have_http_status(200)
+
+        expect(response).to have_http_status(:ok)
       end
     end
 
     context "with not existing caption" do
       let(:id) { Faker::Number.number }
 
-      before :each do
+      before do
         get captions_path
 
         expect(JSON.parse(response.body, symbolize_names: true)[:captions].length).to eq 0
@@ -361,17 +361,17 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                      code: "not_found",
-                                                                      title: "Caption not found",
-                                                                      description: "Couldn't find Caption with 'id'=#{id}"
-                                                                    }))
+                                                                       code: "not_found",
+                                                                       title: "Caption not found",
+                                                                       description: "Couldn't find Caption with 'id'=#{id}"
+                                                                     }))
       end
     end
   end
 
   describe "GET /captions/:id" do
     context "with existing caption" do
-      let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer'])  }
+      let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
       let(:text) { Faker::Beer.brand }
       let(:caption_url) { "/images/#{Digest::MD5.hexdigest("#{url}#{text}")}.jpg" }
       let(:params) do
@@ -385,16 +385,16 @@ RSpec.describe "Captions", type: :request do
 
       it "returns 200 and specifed caption as JSON" do
         post captions_path, params: params
-        expect(response).to have_http_status(201)
+        expect(response).to have_http_status(:created)
 
         id = JSON.parse(response.body, symbolize_names: true)[:caption][:id]
 
         get "/captions/#{id}"
         response_json = JSON.parse(response.body, symbolize_names: true)
 
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:ok)
         expect(response_json[:caption]).to match(hash_including({
-                                                                  url:  url,
+                                                                  url: url,
                                                                   text: text,
                                                                   caption_url: caption_url
                                                                 }))
@@ -404,7 +404,7 @@ RSpec.describe "Captions", type: :request do
     context "with not existing caption" do
       let(:id) { Faker::Number.number }
 
-      before :each do
+      before do
         get captions_path
 
         expect(JSON.parse(response.body, symbolize_names: true)[:captions].length).to eq 0
@@ -422,10 +422,10 @@ RSpec.describe "Captions", type: :request do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                      code: "not_found",
-                                                                      title: "Caption not found",
-                                                                      description: "Couldn't find Caption with 'id'=#{id}"
-                                                                    }))
+                                                                       code: "not_found",
+                                                                       title: "Caption not found",
+                                                                       description: "Couldn't find Caption with 'id'=#{id}"
+                                                                     }))
       end
     end
   end

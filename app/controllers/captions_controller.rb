@@ -12,8 +12,7 @@ class CaptionsController < ApplicationController
   def show
     caption = Caption.find(params[:id])
 
-    render json: { "caption": caption }, status: :ok
-
+    render json: { caption: caption }, status: :ok
   rescue ActiveRecord::RecordNotFound => e
     errors = not_found_error(e.message)
     render json: { errors: [errors] }, status: :not_found
@@ -53,9 +52,8 @@ class CaptionsController < ApplicationController
     else
       errors = caption.errors.map { |err| invalid_parameters_error(err.full_message) }
 
-      render json: { errors: errors }, status: 500
+      render json: { errors: errors }, status: :internal_server_error
     end
-
   rescue ActiveRecord::RecordNotFound => e
     errors = not_found_error(e.message)
     render json: { errors: [errors] }, status: :not_found
