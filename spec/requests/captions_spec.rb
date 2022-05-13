@@ -21,15 +21,27 @@ RSpec.describe "Captions", type: :request do
       end
     end
 
-    context "with captions added" do
-      it "responds with 200",
-        skip: "To be added" do
+    context "with 5 captions added" do
+      before do
+        for i in 1..5 do
+          url = Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) 
+          text = Faker::Beer.brand
+          params = {
+            caption: {
+              url: url,
+              text: text
+            }
+          }
 
+          post "/captions", params: params
+        end
       end
 
-      it "responds with array of captions",
-        skip: "To be added" do
+      it "responds with 200 status and as body an array of 5 captions" do
+        get captions_path
 
+        response_json = JSON.parse(response.body, symbolize_names: true)
+        expect(response_json[:captions].length).to eq(5)
       end
     end
   end
