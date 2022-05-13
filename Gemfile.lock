@@ -66,6 +66,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.2)
     bootsnap (1.11.1)
       msgpack (~> 1.2)
@@ -81,6 +83,8 @@ GEM
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
       railties (>= 3.2)
+    down (5.3.1)
+      addressable (~> 2.8)
     erubi (1.10.0)
     faker (2.20.0)
       i18n (>= 1.8.11, < 2)
@@ -98,6 +102,7 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
     method_source (1.0.0)
+    mini_magick (4.11.0)
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (1.5.1)
@@ -122,6 +127,7 @@ GEM
     parser (3.1.2.0)
       ast (~> 2.4.1)
     pg (1.3.5)
+    public_suffix (4.0.7)
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.6.0)
@@ -213,7 +219,9 @@ DEPENDENCIES
   bootsnap
   debug
   dotenv-rails (~> 2.7, >= 2.7.6)
+  down
   faker
+  mini_magick
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.2, >= 7.0.2.4)

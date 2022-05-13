@@ -7,8 +7,9 @@ RSpec.describe "Captions", type: :request do
     subject(:post_captions) { post captions_path, params: params }
 
     context "when requesting all captions" do
-      let(:url) { Faker::Internet.url }
-      let(:text) { Faker::String.random }
+      let(:url) { Faker::LoremFlickr.image(size: "300x300", search_terms: ['beer']) }
+      let(:text) { Faker::Beer.brand }
+      let(:caption_url) { "/images/#{Digest::MD5.hexdigest("#{url}#{text}")}.jpg" }
       let(:params) do
         {
           caption: {
@@ -23,7 +24,7 @@ RSpec.describe "Captions", type: :request do
         get captions_path
 
         response_json = JSON.parse(response.body, symbolize_names: true)
-        expect(response_json[:captions].first).to match(hash_including({ url: url, text: text }))
+        expect(response_json[:captions].first).to match(hash_including({ url: url, text: text, caption_url: caption_url }))
       end
     end
   end

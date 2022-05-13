@@ -1,0 +1,2 @@
+class ImageDownloaderError < StandardError
+end
