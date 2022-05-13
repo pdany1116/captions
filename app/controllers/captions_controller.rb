@@ -78,12 +78,4 @@ class CaptionsController < ApplicationController
       description: description
     }
   end
-
-  def images_dir
-    if ENV["RAILS_ENV"] == "test"
-      "spec/images/"
-    else
-      "images/"
-    end
-  end
 end
