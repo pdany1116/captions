@@ -18,7 +18,7 @@ class Memefier
 
     def memefy(text, file_name)
       image = MiniMagick::Image.open(file_path(file_name))
-      
+
       image.combine_options do |options|
         options.gravity "south"
         options.font "Umpush-Bold"

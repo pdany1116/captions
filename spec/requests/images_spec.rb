@@ -53,7 +53,7 @@ RSpec.describe "/images" do
         response_json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response_json[:errors].first).to match(hash_including({
-                                                                       code: "not_found",
+                                                                       code: "image_not_found",
                                                                        title: "Image not found",
                                                                        description: "Couldn't find Image #{image_name}"
                                                                      }))

@@ -24,7 +24,8 @@ RSpec.describe "Captions", type: :request do
         get captions_path
 
         response_json = JSON.parse(response.body, symbolize_names: true)
-        expect(response_json[:captions].first).to match(hash_including({ url: url, text: text, caption_url: caption_url }))
+        expect(response_json[:captions].first).to match(hash_including({ url: url, text: text,
+                                                                         caption_url: caption_url }))
       end
     end
   end
