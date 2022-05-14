@@ -31,6 +31,8 @@ class CaptionsController < ApplicationController
       caption.caption_url = "/images/#{image_name}"
       caption.save
 
+      CaptionMailer.creation_success_email(caption).deliver_now
+
       render json: { caption: caption }, status: :created
     else
       errors = caption.errors.map { |err| CaptionInvalidParamsErrorMessage.new(err.full_message).body }
