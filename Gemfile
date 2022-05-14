@@ -39,6 +39,7 @@ gem "bootsnap", require: false
 # gem "rack-cors"
 
 gem "down"
+gem "letter_opener"
 gem "mini_magick"
 
 group :development, :test do
