@@ -8,4 +8,10 @@ Rails.application.routes.draw do
 
   resources :captions
   resources :images, only: [:show]
+  resources :users do
+    collection do
+      post 'sign_up'
+      post 'login'
+    end
+  end
 end
