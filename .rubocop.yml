@@ -14,10 +14,6 @@ Style/StringLiterals:
 Style/Documentation:
   Enabled: false
 
-Metrics/BlockLength:
-  Exclude:
-    - "spec/**/*"
-
 Metrics/MethodLength:
   Enabled: false
 
@@ -47,4 +43,10 @@ RSpec/NestedGroups:
   Enabled: false
 
 Rails/I18nLocaleTexts:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
   Enabled: false

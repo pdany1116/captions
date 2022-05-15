@@ -19,18 +19,18 @@ RSpec.describe "Users", type: :request do
       context "with not existing user" do
         it "responds with 201" do
           post_sign_up
-  
+
           expect(response).to have_http_status(:created)
         end
-  
+
         it "creates a user" do
-          expect { post_sign_up }.to change { User.count }.by(1)
+          expect { post_sign_up }.to change(User, :count).by(1)
         end
-  
+
         it "creates a token" do
-          expect { post_sign_up }.to change { Token.count }.by(1)
+          expect { post_sign_up }.to change(Token, :count).by(1)
         end
-  
+
         it "returns the token value" do
           post_sign_up
 
@@ -40,11 +40,11 @@ RSpec.describe "Users", type: :request do
           expect(token.expires_at).to be_within(1.second).of(1.day.from_now)
         end
       end
-      
+
       context "with existing user" do
         it "responds with 409" do
           post_sign_up
-  
+
           expect(response).to have_http_status(:conflict)
         end
 
@@ -52,18 +52,18 @@ RSpec.describe "Users", type: :request do
           post_sign_up
 
           expect(parsed_body[:errors].first).to match(hash_including({
-            code: "already_existing_user",
-            title: "User already exists",
-            description: "User with #{email} is already registered!"
-          }))
+                                                                       code: "already_existing_user",
+                                                                       title: "User already exists",
+                                                                       description: "User with #{email} is already registered!"
+                                                                     }))
         end
 
         it "does not create a user" do
-          expect { post_sign_up }.to change { User.count }.by(0)
+          expect { post_sign_up }.to change(User, :count).by(0)
         end
 
         it "does not create a token" do
-          expect { post_sign_up }.to change { Token.count }.by(0)
+          expect { post_sign_up }.to change(Token, :count).by(0)
         end
       end
     end
@@ -81,18 +81,18 @@ RSpec.describe "Users", type: :request do
         post_sign_up
 
         expect(parsed_body[:errors].first).to match(hash_including({
-          code: "invalid_caption_parameters",
-          title: "Invalid parameters in request body",
-          description: "param is missing or the value is empty: user"
-        }))
+                                                                     code: "invalid_caption_parameters",
+                                                                     title: "Invalid parameters in request body",
+                                                                     description: "param is missing or the value is empty: user"
+                                                                   }))
       end
- 
+
       it "does not create a user" do
-        expect { post_sign_up }.to change { User.count }.by(0)
+        expect { post_sign_up }.to change(User, :count).by(0)
       end
 
       it "does not create a token" do
-        expect { post_sign_up }.to change { Token.count }.by(0)
+        expect { post_sign_up }.to change(Token, :count).by(0)
       end
     end
 
@@ -115,18 +115,18 @@ RSpec.describe "Users", type: :request do
         post_sign_up
 
         expect(parsed_body[:errors].first).to match(hash_including({
-          code: "invalid_user_parameters",
-          title: "Invalid parameters in request body",
-          description: "param is missing or the value is empty: email"
-        }))
+                                                                     code: "invalid_user_parameters",
+                                                                     title: "Invalid parameters in request body",
+                                                                     description: "param is missing or the value is empty: email"
+                                                                   }))
       end
- 
+
       it "does not create a user" do
-        expect { post_sign_up }.to change { User.count }.by(0)
+        expect { post_sign_up }.to change(User, :count).by(0)
       end
 
       it "does not create a token" do
-        expect { post_sign_up }.to change { Token.count }.by(0)
+        expect { post_sign_up }.to change(Token, :count).by(0)
       end
     end
 
@@ -149,29 +149,29 @@ RSpec.describe "Users", type: :request do
         post_sign_up
 
         expect(parsed_body[:errors].first).to match(hash_including({
-          code: "invalid_user_parameters",
-          title: "Invalid parameters in request body",
-          description: "param is missing or the value is empty: password"
-        }))
+                                                                     code: "invalid_user_parameters",
+                                                                     title: "Invalid parameters in request body",
+                                                                     description: "param is missing or the value is empty: password"
+                                                                   }))
       end
- 
+
       it "does not create a user" do
-        expect { post_sign_up }.to change { User.count }.by(0)
+        expect { post_sign_up }.to change(User, :count).by(0)
       end
 
       it "does not create a token" do
-        expect { post_sign_up }.to change { Token.count }.by(0)
+        expect { post_sign_up }.to change(Token, :count).by(0)
       end
     end
 
     context "with invalid email value" do
       let(:params) do
-      {
-        user: {
-          email: email,
-          password: password
+        {
+          user: {
+            email: email,
+            password: password
+          }
         }
-      }
       end
 
       context "with empty email" do
@@ -188,18 +188,18 @@ RSpec.describe "Users", type: :request do
           post_sign_up
 
           expect(parsed_body[:errors].first).to match(hash_including({
-            code: "invalid_user_parameters",
-            title: "Invalid parameters in request body",
-            description: "Email can't be blank"
-          }))
+                                                                       code: "invalid_user_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "Email can't be blank"
+                                                                     }))
         end
- 
+
         it "does not create a user" do
-          expect { post_sign_up }.to change { User.count }.by(0)
+          expect { post_sign_up }.to change(User, :count).by(0)
         end
-  
+
         it "does not create a token" do
-          expect { post_sign_up }.to change { Token.count }.by(0)
+          expect { post_sign_up }.to change(Token, :count).by(0)
         end
       end
 
@@ -217,18 +217,18 @@ RSpec.describe "Users", type: :request do
           post_sign_up
 
           expect(parsed_body[:errors].first).to match(hash_including({
-            code: "invalid_user_parameters",
-            title: "Invalid parameters in request body",
-            description: "Email can't be blank"
-          }))
+                                                                       code: "invalid_user_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "Email can't be blank"
+                                                                     }))
         end
- 
+
         it "does not create a user" do
-          expect { post_sign_up }.to change { User.count }.by(0)
+          expect { post_sign_up }.to change(User, :count).by(0)
         end
-  
+
         it "does not create a token" do
-          expect { post_sign_up }.to change { Token.count }.by(0)
+          expect { post_sign_up }.to change(Token, :count).by(0)
         end
       end
 
@@ -241,27 +241,27 @@ RSpec.describe "Users", type: :request do
 
           expect(response).to have_http_status(:bad_request)
         end
-  
+
         it "returns an error body with invalid password value" do
           post_sign_up
 
           expect(parsed_body[:errors].first).to match(hash_including({
-            code: "invalid_user_parameters",
-            title: "Invalid parameters in request body",
-            description: "Password can't be blank"
-          }))
+                                                                       code: "invalid_user_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "Password can't be blank"
+                                                                     }))
         end
       end
     end
 
     context "with invalid password value" do
       let(:params) do
-      {
-        user: {
-          email: email,
-          password: password
+        {
+          user: {
+            email: email,
+            password: password
+          }
         }
-      }
       end
 
       context "with empty password" do
@@ -273,23 +273,23 @@ RSpec.describe "Users", type: :request do
 
           expect(response).to have_http_status(:bad_request)
         end
-  
+
         it "returns an error body with invalid password value" do
           post_sign_up
 
           expect(parsed_body[:errors].first).to match(hash_including({
-            code: "invalid_user_parameters",
-            title: "Invalid parameters in request body",
-            description: "Password can't be blank"
-          }))
+                                                                       code: "invalid_user_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "Password can't be blank"
+                                                                     }))
         end
- 
+
         it "does not create a user" do
-          expect { post_sign_up }.to change { User.count }.by(0)
+          expect { post_sign_up }.to change(User, :count).by(0)
         end
-  
+
         it "does not create a token" do
-          expect { post_sign_up }.to change { Token.count }.by(0)
+          expect { post_sign_up }.to change(Token, :count).by(0)
         end
       end
 
@@ -302,23 +302,23 @@ RSpec.describe "Users", type: :request do
 
           expect(response).to have_http_status(:bad_request)
         end
-  
+
         it "returns an error body with invalid password value" do
           post_sign_up
 
           expect(parsed_body[:errors].first).to match(hash_including({
-            code: "invalid_user_parameters",
-            title: "Invalid parameters in request body",
-            description: "Password can't be blank"
-          }))
+                                                                       code: "invalid_user_parameters",
+                                                                       title: "Invalid parameters in request body",
+                                                                       description: "Password can't be blank"
+                                                                     }))
         end
- 
+
         it "does not create a user" do
-          expect { post_sign_up }.to change { User.count }.by(0)
+          expect { post_sign_up }.to change(User, :count).by(0)
         end
-  
+
         it "does not create a token" do
-          expect { post_sign_up }.to change { Token.count }.by(0)
+          expect { post_sign_up }.to change(Token, :count).by(0)
         end
       end
     end

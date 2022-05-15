@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   def sign_up
     permitted_params = params[:user].permit(:email, :password)
