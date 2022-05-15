@@ -25,11 +25,11 @@ class CaptionsController < ApplicationController
 
     if caption.valid?
       image_name = "#{Digest::MD5.hexdigest("#{caption.url}#{caption.text}")}.jpg"
-
-      ImageDownloader.download(caption.url, image_name)
-      Memefier.memefy(caption.text, image_name)
       caption.caption_url = "/images/#{image_name}"
       caption.save
+
+      CreateCaptionImageJob.perform_later(caption, image_name)
+      CaptionMailer.creation_success_email(caption).deliver_now
 
       render json: { caption: caption }, status: :created
     else
@@ -37,7 +37,7 @@ class CaptionsController < ApplicationController
 
       render json: { errors: errors }, status: :unprocessable_entity
     end
-  rescue ActionController::ParameterMissing, ImageDownloaderError => e
+  rescue ActionController::ParameterMissing => e
     error = CaptionInvalidParamsErrorMessage.new(e.original_message).body
     render json: { errors: [error] }, status: :bad_request
   end

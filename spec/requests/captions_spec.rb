@@ -79,6 +79,10 @@ RSpec.describe "Captions", type: :request do
                                                                   caption_url: caption_url
                                                                 }))
       end
+
+      it "sends confirmation mail to user" do
+        expect { post_captions }.to change { CaptionMailer.deliveries.count }.by(1)
+      end
     end
 
     context "with missing root element caption in request body" do

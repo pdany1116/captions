@@ -9,12 +9,14 @@ RSpec.describe "/images" do
       let(:text) { Faker::Beer.brand }
 
       before do
-        post "/captions", params: {
-          caption: {
-            url: url,
-            text: text
+        perform_enqueued_jobs do
+          post "/captions", params: {
+            caption: {
+              url: url,
+              text: text
+            }
           }
-        }
+        end
 
         caption_url = JSON.parse(response.body, symbolize_names: true)[:caption][:caption_url]
 
