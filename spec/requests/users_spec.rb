@@ -81,7 +81,7 @@ RSpec.describe "Users", type: :request do
         post_sign_up
 
         expect(parsed_body[:errors].first).to match(hash_including({
-                                                                     code: "invalid_caption_parameters",
+                                                                     code: "invalid_user_parameters",
                                                                      title: "Invalid parameters in request body",
                                                                      description: "param is missing or the value is empty: user"
                                                                    }))
@@ -145,7 +145,7 @@ RSpec.describe "Users", type: :request do
         expect(response).to have_http_status(:bad_request)
       end
 
-      it "returns an error body with text invalid parameters message" do
+      it "returns an error body with password invalid parameters message" do
         post_sign_up
 
         expect(parsed_body[:errors].first).to match(hash_including({
